@@ -10,7 +10,11 @@
    ───────────────────────────────────────────── */
 
 int is_git_repo(void) {
-    return system("git rev-parse --git-dir > /dev/null 2>&1") == 0;
+    #ifdef _WIN32
+        return system("\"C:\\Program Files\\Git\\bin\\git.exe\" rev-parse --git-dir > NUL 2>&1") == 0;
+    #else
+        return system("git rev-parse --git-dir > /dev/null 2>&1") == 0;
+    #endif
 }
 
 void build_since(char *buf, size_t sz, Period period, int mult) {
