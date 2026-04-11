@@ -24,6 +24,10 @@
 
 int main(int argc, char *argv[]) {
 
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+    #endif
+
     /* 1. make sure we are inside a git repository */
     if (!is_git_repo()) {
         print_error("Not a git repository (or any of the parent directories).");
