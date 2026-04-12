@@ -1,5 +1,12 @@
 # git-recall
 
+[![winget](https://img.shields.io/badge/winget-AMMAAR--IC.git--recall-blue?logo=windows)](https://github.com/microsoft/winget-pkgs)
+[![APT PPA](https://img.shields.io/badge/PPA-ammaar--apt%2Fgit--recall-orange?logo=ubuntu)](https://launchpad.net/~ammaar-apt/+archive/ubuntu/git-recall)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Language: C](https://img.shields.io/badge/language-C-blue.svg)]()
+[![GitHub release](https://img.shields.io/github/v/release/AMMAAR-IC/git-recall)](https://github.com/AMMAAR-IC/git-recall/releases)
+[![GitHub stars](https://img.shields.io/github/stars/AMMAAR-IC/git-recall)](https://github.com/AMMAAR-IC/git-recall/stargazers)
+
 > Your personal git standup tool. See what you (and your team) did — by day, week, month, or year.
 
 Built in pure C. No dependencies. Just git.
@@ -8,8 +15,21 @@ Built in pure C. No dependencies. Just git.
 
 ## Install
 
+### Windows — winget
+```powershell
+winget install AMMAAR-IC.git-recall
+```
+
+### Ubuntu / Debian — apt
 ```bash
-git clone https://github.com/yourname/git-recall
+sudo add-apt-repository ppa:ammaar-apt/git-recall
+sudo apt update
+sudo apt install git-recall
+```
+
+### Build from Source
+```bash
+git clone https://github.com/AMMAAR-IC/git-recall
 cd git-recall
 make
 sudo make install
@@ -20,27 +40,27 @@ sudo make install
 ## Usage
 
 ```bash
-git recall                    # default: last 1 week
-git recall --day              # last 1 day
-git recall --week             # last 1 week
-git recall --month            # last 1 month
-git recall --year             # last 1 year
+git-recall                    # default: last 1 week
+git-recall --day              # last 1 day
+git-recall --week             # last 1 week
+git-recall --month            # last 1 month
+git-recall --year             # last 1 year
 ```
 
 ### Multiplier flag `-N`
 
 ```bash
-git recall --day   -3         # last 3 days
-git recall --week  -2         # last 2 weeks
-git recall --month -2         # last 2 months
-git recall --year  -2         # last 2 years
+git-recall --day   -3         # last 3 days
+git-recall --week  -2         # last 2 weeks
+git-recall --month -2         # last 2 months
+git-recall --year  -2         # last 2 years
 ```
 
 ### Output to file
 
 ```bash
-git recall --month > recall.txt          # write to existing file
-git recall --month > -mk recall.txt      # create file and write
+git-recall --month > recall.txt          # write to existing file
+git-recall --month > -mk recall.txt      # create file and write
 ```
 
 ---
@@ -62,26 +82,23 @@ git recall --month > -mk recall.txt      # create file and write
 
 ## Windows — Fix Garbled Characters in PowerShell
 
-On Windows, PowerShell may display box-drawing characters (`─`, `—`) as garbled text like `ΓöÇ`. This is a UTF-8 encoding issue, not a bug in git-recall.
+On Windows, PowerShell may display box-drawing characters (`─`, `—`) as garbled text like `ΓöÇ`.
+This is a UTF-8 encoding issue, not a bug in git-recall.
 
 ### Quick Fix (current session only)
 
-Run this once before using git-recall:
-
 ```powershell
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-./git-recall.exe --week
+git-recall --week
 ```
 
-### Permanent Fix (applies to every session)
-
-Add the encoding line to your PowerShell profile so it loads automatically:
+### Permanent Fix
 
 ```powershell
-# Step 1 — open your PowerShell profile in Notepad
+# open your PowerShell profile
 notepad $PROFILE
 
-# Step 2 — add this line to the file and save
+# add this line and save
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 ```
 
@@ -89,7 +106,7 @@ Restart PowerShell and git-recall will render correctly from now on.
 
 ### Best Fix — Use Windows Terminal
 
-If you haven't already, install **Windows Terminal** from the Microsoft Store. It has full Unicode support out of the box and requires no configuration — git-recall will render perfectly with no extra steps.
+Install **Windows Terminal** from the Microsoft Store — full Unicode support out of the box, no configuration needed.
 
 ---
 
@@ -106,6 +123,17 @@ If you haven't already, install **Windows Terminal** from the Microsoft Store. I
 
 ## Uninstall
 
+### Windows
+```powershell
+winget uninstall Ammaar.git-recall
+```
+
+### Ubuntu / Debian
+```bash
+sudo apt remove git-recall
+```
+
+### From Source
 ```bash
 sudo make uninstall
 ```
@@ -114,4 +142,4 @@ sudo make uninstall
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE)

@@ -1,0 +1,12 @@
+Source: git-recall
+Section: utils
+Priority: optional
+Maintainer: Ammaar Bakshi <ammaar.dnf@gmail.com>
+Build-Depends: debhelper, gcc, make, git
+
+Package: git-recall
+Architecture: any
+Depends: git
+Description: Your personal git standup tool
+ See what you committed by day, week, month, or year.
+ Built in pure C. No dependencies. Just git.

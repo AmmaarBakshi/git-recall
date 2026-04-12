@@ -1,3 +1,40 @@
-*.exe
+# ── Compiled binaries ──────────────────────────
+git-recall
+git-recall.exe
+
+# ── Object files ───────────────────────────────
 *.o
+*.obj
+
+# ── Build artifacts ─────────────────────────────
 *.out
+*.a
+*.lib
+
+# ── Debian packaging ───────────────────────────
+debian/.debhelper/
+debian/git-recall/
+debian/files
+debian/*.log
+debian/*.substvars
+*.dsc
+*.changes
+*.buildinfo
+*.upload
+*.debian.tar.xz
+*.orig.tar.gz
+
+# ── OS files ───────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor files ───────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Winget manifest (generated) ────────────────
+manifests/
