@@ -8,7 +8,7 @@ Commands:
 - git-recall
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/AMMAAR-IC/git-recall/releases/download/v1.0.0/git-recall.exe
+  InstallerUrl: https://github.com/AmmaarBakshi/git-recall/releases/download/v1.0.0/git-recall.exe
   InstallerSha256: 985BA809EC8792247AA646917C8350AC83918D681EF6E2A78C228E8187B2275A
 ManifestType: installer
 ManifestVersion: 1.12.0

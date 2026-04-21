@@ -5,15 +5,15 @@ PackageIdentifier: Ammaar.git-recall
 PackageVersion: 1.1.0
 PackageLocale: en-US
 Publisher: Ammaar
-PublisherUrl: https://github.com/AMMAAR-IC
-PublisherSupportUrl: https://github.com/AMMAAR-IC/git-recall/issues
+PublisherUrl: https://github.com/AmmaarBakshi
+PublisherSupportUrl: https://github.com/AmmaarBakshi/git-recall/issues
 PackageName: git-recall
-PackageUrl: https://github.com/AMMAAR-IC/git-recall
+PackageUrl: https://github.com/AmmaarBakshi/git-recall
 License: MIT
 ShortDescription: A personal git standup tool written in pure C  see what you committed by day, week, month, or year. No dependencies, just git.
-ReleaseNotesUrl: https://github.com/AMMAAR-IC/git-recall/releases/tag/v1.0.0
+ReleaseNotesUrl: https://github.com/AmmaarBakshi/git-recall/releases/tag/v1.0.0
 Documentations:
 - DocumentLabel: Wiki
-  DocumentUrl: https://github.com/AMMAAR-IC/git-recall/wiki
+  DocumentUrl: https://github.com/AmmaarBakshi/git-recall/wiki
 ManifestType: defaultLocale
 ManifestVersion: 1.12.0
