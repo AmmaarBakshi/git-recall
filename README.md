@@ -1,33 +1,51 @@
-# git-recall
+This is a solid tool. To make the README truly "pro-tier," we should focus on **visual hierarchy**, **feature highlights**, and **clearer technical specifications**. Since it's built in pure C, that’s a huge selling point (speed and portability) that we should emphasize.
 
-[![winget](https://img.shields.io/badge/winget-AMMAAR--IC.git--recall-blue?logo=windows)](https://github.com/microsoft/winget-pkgs)
-[![APT PPA](https://img.shields.io/badge/PPA-ammaar--apt%2Fgit--recall-orange?logo=ubuntu)](https://launchpad.net/~ammaar-apt/+archive/ubuntu/git-recall)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Language: C](https://img.shields.io/badge/language-C-blue.svg)]()
-[![GitHub release](https://img.shields.io/github/v/release/AmmaarBakshi/git-recall)](https://github.com/AmmaarBakshi/git-recall/releases)
-[![GitHub stars](https://img.shields.io/github/stars/AmmaarBakshi/git-recall)](https://github.com/AmmaarBakshi/git-recall/stargazers)
+Here is a revamped version of your README.
 
-> Your personal git standup tool. See what you (and your team) did — by day, week, month, or year.
+-----
 
-Built in pure C. No dependencies. Just git.
+# 📜 git-recall
 
----
+[](https://github.com/microsoft/winget-pkgs)
+[](https://launchpad.net/~ammaar-apt/+archive/ubuntu/git-recall)
+[](https://www.google.com/search?q=)
+[](https://www.google.com/search?q=LICENSE)
 
-## Install
+**git-recall** is your personal standup assistant. Built in **pure C** with zero dependencies, it provides a lightning-fast summary of what you and your team have accomplished over any timeframe.
 
-### Windows — winget
+[**Installation**](https://www.google.com/search?q=%23-install) • [**Usage**](https://www.google.com/search?q=%23-usage) • [**Troubleshooting**](https://www.google.com/search?q=%23-windows-encoding-fix) • [**Contributing**](https://www.google.com/search?q=%23license)
+
+-----
+
+## ✨ Features
+
+  * **Zero Dependencies:** No Python, Node.js, or heavy runtimes. Just `git` and a C compiler.
+  * **Flexible Scopes:** Quickly pivot between daily, weekly, monthly, or yearly summaries.
+  * **Multipliers:** Look back $N$ number of days or weeks with simple flags.
+  * **Native File Export:** Built-in support for logging summaries to text files.
+  * **Blazing Fast:** Written in C for near-instant execution even in massive monorepos.
+
+-----
+
+## 🚀 Install
+
+### Windows (Winget)
+
 ```powershell
 winget install Ammaar.git-recall
 ```
 
-### Ubuntu / Debian — apt
+### Ubuntu / Debian (PPA)
+
 ```bash
 sudo add-apt-repository ppa:ammaar-apt/git-recall
-sudo apt update
-sudo apt install git-recall
+sudo apt update && sudo apt install git-recall
 ```
 
 ### Build from Source
+
+Perfect for macOS or other Linux distros.
+
 ```bash
 git clone https://github.com/AmmaarBakshi/git-recall
 cd git-recall
@@ -35,39 +53,46 @@ make
 sudo make install
 ```
 
----
+-----
 
-## Usage
+## 🛠 Usage
 
-```bash
-git recall                    # default: last 1 week
-git recall --day              # last 1 day
-git recall --week             # last 1 week
-git recall --month            # last 1 month
-git recall --year             # last 1 year
-```
+The basic syntax is `git recall [range] [multiplier]`.
 
-### Multiplier flag `-N`
+### Quick Scopes
 
-```bash
-git recall --day   -3         # last 3 days
-git recall --week  -2         # last 2 weeks
-git recall --month -2         # last 2 months
-git recall --year  -2         # last 2 years
-```
+| Command | Description |
+| :--- | :--- |
+| `git recall` | Defaults to the **last 7 days** |
+| `git recall --day` | See today's progress |
+| `git recall --week` | Summary of the last week |
+| `git recall --month` | Summary of the last month |
+| `git recall --year` | The "Year in Review" view |
 
-### Output to file
+### Lookback Multipliers
+
+Need to see the last 3 days or 2 months? Just add the number:
 
 ```bash
-git recall --month > recall.txt          # write to existing file
-git recall --month > -mk recall.txt      # create file and write
+git recall --day -3    # Last 3 days
+git recall --month -2  # Last 2 months
 ```
 
----
+### Exporting Reports
 
-## Example Output
+```bash
+# Append/Write to an existing file
+git recall --month > recall.txt
 
+# Force create a new file and write
+git recall --month > -mk recall.txt
 ```
+
+-----
+
+## 🖥 Example Output
+
+```text
 ──────────────────────────────────────────────────────
   git recall  —  Last Week  (since 2026-04-04)
 ──────────────────────────────────────────────────────
@@ -78,68 +103,38 @@ git recall --month > -mk recall.txt      # create file and write
 ──────────────────────────────────────────────────────
 ```
 
----
+-----
 
-## Windows — Fix Garbled Characters in PowerShell
+## 🔧 Windows Encoding Fix
 
-On Windows, PowerShell may display box-drawing characters (`─`, `—`) as garbled text like `ΓöÇ`.
-This is a UTF-8 encoding issue, not a bug in git-recall.
+If you see garbled characters like `ΓöÇ` instead of smooth lines `─`, your PowerShell session isn't using UTF-8.
 
-### Quick Fix (current session only)
+**The Permanent Fix:**
 
-```powershell
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-git recall --week
-```
+1.  Open your profile: `notepad $PROFILE`
+2.  Paste: `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+3.  Restart PowerShell.
 
-### Permanent Fix
+> [\!TIP]
+> For the best experience, use **Windows Terminal**. It handles Unicode natively without any extra configuration.
 
-```powershell
-# open your PowerShell profile
-notepad $PROFILE
+-----
 
-# add this line and save
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-```
+## ⚠️ Error Reference
 
-Restart PowerShell and git recall will render correctly from now on.
+| Message | Solution |
+| :--- | :--- |
+| `Not a git repository...` | Run the command inside a folder initialized with `git init`. |
+| `Unknown option: --xyz` | Check `git recall --help` for valid flags. |
+| `Expected filename after '>'` | Ensure you provide a path (e.g., `> report.txt`). |
+| `Cannot open file 'x'` | Check folder permissions or if the file is locked by another app. |
 
-### Best Fix — Use Windows Terminal
+-----
 
-Install **Windows Terminal** from the Microsoft Store — full Unicode support out of the box, no configuration needed.
+## 🛡 License
 
----
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
-## Error Messages
+-----
 
-| Situation | Message |
-|---|---|
-| Not in a git repo | `Not a git repository. Run 'git init' first.` |
-| Unknown flag | `Unknown option: --xyz` |
-| Missing filename after `>` | `Expected filename after '>'` |
-| Cannot open/create file | `Cannot open file 'x': <reason>` |
-
----
-
-## Uninstall
-
-### Windows
-```powershell
-winget uninstall Ammaar.git-recall
-```
-
-### Ubuntu / Debian
-```bash
-sudo apt remove git-recall
-```
-
-### From Source
-```bash
-sudo make uninstall
-```
-
----
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+*Created by [AmmaarBakshi](https://www.google.com/search?q=https://github.com/AmmaarBakshi)*
