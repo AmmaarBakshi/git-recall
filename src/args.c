@@ -63,8 +63,8 @@ int parse_args(int argc, char *argv[], RecallArgs *a) {
                 }
             }
 
-            strncpy(a->outfile, argv[i + 1], MAX_PATH - 1);
-            a->outfile[MAX_PATH - 1] = '\0';
+            strncpy(a->outfile, argv[i + 1], RECALL_MAX_PATH - 1);
+            a->outfile[RECALL_MAX_PATH - 1] = '\0';
             i++;
             continue;
         }

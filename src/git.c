@@ -11,7 +11,8 @@
 
 int is_git_repo(void) {
     #ifdef _WIN32
-        return system("\"C:\\Program Files\\Git\\bin\\git.exe\" rev-parse --git-dir > NUL 2>&1") == 0;
+        /* rely on PATH — git is not always in C:\Program Files\Git */
+        return system("git rev-parse --git-dir > NUL 2>&1") == 0;
     #else
         return system("git rev-parse --git-dir > /dev/null 2>&1") == 0;
     #endif

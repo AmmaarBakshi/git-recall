@@ -5,7 +5,7 @@
    args.h  —  CLI argument types and parser
    ───────────────────────────────────────────── */
 
-#define MAX_PATH 512
+#define RECALL_MAX_PATH 512
 
 /* period constants */
 typedef enum {
@@ -19,7 +19,7 @@ typedef enum {
 typedef struct {
     Period  period;             /* which time unit          */
     int     multiplier;         /* how many of that unit    */
-    char    outfile[MAX_PATH];  /* output filename, or ""   */
+    char    outfile[RECALL_MAX_PATH];  /* output filename, or ""   */
     int     make_file;          /* 1 if -mk was given       */
 } RecallArgs;
 

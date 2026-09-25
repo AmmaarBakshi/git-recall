@@ -23,7 +23,7 @@ FILE *open_output(const RecallArgs *args) {
 
     FILE *f = fopen(args->outfile, "w");
     if (!f) {
-        char errmsg[MAX_PATH * 2 + 128];
+        char errmsg[RECALL_MAX_PATH * 2 + 128];
         if (args->make_file) {
             snprintf(errmsg, sizeof(errmsg),
                      "Cannot create file '%s': %s",

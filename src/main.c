@@ -1,5 +1,8 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "args.h"
 #include "color.h"
 #include "git.h"
