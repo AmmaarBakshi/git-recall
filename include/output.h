@@ -10,9 +10,10 @@
 #include "args.h"
 
 /* run git log for the given period/multiplier
+   (optionally only the current user's commits)
    and pretty-print results to `out`.
    returns 0 on success, 1 on error             */
-int run_recall(FILE *out, Period period, int mult);
+int run_recall(FILE *out, Period period, int mult, int only_me);
 
 /* open the output file described in args.
    returns the FILE* to write to (may be stdout),

@@ -44,15 +44,43 @@ FILE *open_output(const RecallArgs *args) {
     return f;
 }
 
+/* ── read `git config user.email` into buf.
+      returns 0 on success, 1 if unset or unsafe ── */
+static int get_user_email(char *buf, size_t sz) {
+    FILE *p = popen("git config user.email", "r");
+    if (!p) return 1;
+    if (!fgets(buf, (int)sz, p)) buf[0] = '\0';
+    pclose(p);
+
+    buf[strcspn(buf, "\r\n")] = '\0';
+    /* refuse characters that could break out of the quoted shell arg */
+    if (buf[0] == '\0' || strpbrk(buf, "\"`$%!\\") != NULL)
+        return 1;
+    return 0;
+}
+
 /* ── fetch git log and print commits ── */
-int run_recall(FILE *out, Period period, int mult) {
+int run_recall(FILE *out, Period period, int mult, int only_me) {
     char since[64];
     char label[64];
     char cmd[MAX_CMD];
     char line[MAX_LINE];
 
+    char author_opt[320] = "";
+
     build_since(since, sizeof(since), period, mult);
     period_label(label, sizeof(label), period, mult);
+
+    if (only_me) {
+        char email[256];
+        if (get_user_email(email, sizeof(email)) != 0) {
+            print_error("--me needs git user.email to be set "
+                        "(git config user.email you@example.com).");
+            return 1;
+        }
+        snprintf(author_opt, sizeof(author_opt), "--author=\"<%s>\" ", email);
+        strncat(label, " (mine)", sizeof(label) - strlen(label) - 1);
+    }
 
     /* ── header ── */
     fprintf(out, "\n");
@@ -70,11 +98,11 @@ int run_recall(FILE *out, Period period, int mult) {
          %an = author name
          %s  = commit subject                */
     snprintf(cmd, sizeof(cmd),
-             "git log --all --since=\"%s\" "
+             "git log --all --since=\"%s\" %s"
              "--pretty=format:\"%%h%%x1f%%ad%%x1f%%an%%x1f%%s\" "
              "--date=format:\"%%Y-%%m-%%d %%H:%%M\" "
              "--no-merges",
-             since);
+             since, author_opt);
 
     FILE *pipe = popen(cmd, "r");
     if (!pipe) {

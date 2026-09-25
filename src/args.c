@@ -10,12 +10,13 @@
    ───────────────────────────────────────────── */
 
 void print_usage(void) {
-    fprintf(stderr, "Usage: git recall [--day|--week|--month|--year] [-N] [> [-mk] file]\n");
+    fprintf(stderr, "Usage: git recall [--day|--week|--month|--year] [-N] [--me] [> [-mk] file]\n");
     fprintf(stderr, "  Colors are disabled when output is piped or NO_COLOR is set.\n");
     fprintf(stderr, "  Examples:\n");
     fprintf(stderr, "    git recall                   # last week (default)\n");
     fprintf(stderr, "    git recall --month           # last month\n");
     fprintf(stderr, "    git recall --month -2        # last 2 months\n");
+    fprintf(stderr, "    git recall --week --me       # only your own commits\n");
     fprintf(stderr, "    git recall --year > log.txt  # write to file\n");
     fprintf(stderr, "    git recall --day > -mk out.txt  # create file & write\n");
 }
@@ -27,6 +28,7 @@ int parse_args(int argc, char *argv[], RecallArgs *a) {
     a->outfile[0] = '\0';
     a->make_file  = 0;
     a->show_help  = 0;
+    a->only_me    = 0;
 
     for (int i = 1; i < argc; i++) {
 
@@ -35,6 +37,9 @@ int parse_args(int argc, char *argv[], RecallArgs *a) {
             a->show_help = 1;
             return 0;
         }
+
+        /* ── only my commits ── */
+        if (strcmp(argv[i], "--me") == 0) { a->only_me = 1; continue; }
 
         /* ── period flags ── */
         if (strcmp(argv[i], "--day")   == 0) { a->period = PERIOD_DAY;   continue; }

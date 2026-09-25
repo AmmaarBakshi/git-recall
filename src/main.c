@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         return 1;
 
     /* 4. fetch git log and print */
-    int ret = run_recall(out, args.period, args.multiplier);
+    int ret = run_recall(out, args.period, args.multiplier, args.only_me);
 
     /* 5. close file and notify user if we wrote to one */
     if (out != stdout) {
