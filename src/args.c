@@ -36,11 +36,16 @@ int parse_args(int argc, char *argv[], RecallArgs *a) {
 
         /* ── multiplier  -N  (e.g. -2, -3) ── */
         if (argv[i][0] == '-' && argv[i][1] >= '1' && argv[i][1] <= '9') {
-            a->multiplier = atoi(argv[i] + 1);
-            if (a->multiplier <= 0) {
-                print_error("Multiplier must be a positive number (e.g. -2).");
+            char *end;
+            long n = strtol(argv[i] + 1, &end, 10);
+            if (*end != '\0' || n <= 0 || n > 10000) {
+                char errmsg[128];
+                snprintf(errmsg, sizeof(errmsg),
+                         "Invalid multiplier '%s' (use -1 to -10000).", argv[i]);
+                print_error(errmsg);
                 return 1;
             }
+            a->multiplier = (int)n;
             continue;
         }
 
