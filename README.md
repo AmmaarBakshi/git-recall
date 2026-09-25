@@ -1,19 +1,8 @@
-This is a solid tool. To make the README truly "pro-tier," we should focus on **visual hierarchy**, **feature highlights**, and **clearer technical specifications**. Since it's built in pure C, that’s a huge selling point (speed and portability) that we should emphasize.
-
-Here is a revamped version of your README.
-
------
-
 # 📜 git-recall
-
-[](https://github.com/microsoft/winget-pkgs)
-[](https://launchpad.net/~ammaar-apt/+archive/ubuntu/git-recall)
-[](https://www.google.com/search?q=)
-[](https://www.google.com/search?q=LICENSE)
 
 **git-recall** is your personal standup assistant. Built in **pure C** with zero dependencies, it provides a lightning-fast summary of what you and your team have accomplished over any timeframe.
 
-[**Installation**](https://www.google.com/search?q=%23-install) • [**Usage**](https://www.google.com/search?q=%23-usage) • [**Troubleshooting**](https://www.google.com/search?q=%23-windows-encoding-fix) • [**Contributing**](https://www.google.com/search?q=%23license)
+[**Installation**](#-install) • [**Usage**](#-usage) • [**Troubleshooting**](#-windows-encoding-fix) • [**License**](#-license)
 
 -----
 
@@ -21,7 +10,8 @@ Here is a revamped version of your README.
 
   * **Zero Dependencies:** No Python, Node.js, or heavy runtimes. Just `git` and a C compiler.
   * **Flexible Scopes:** Quickly pivot between daily, weekly, monthly, or yearly summaries.
-  * **Multipliers:** Look back $N$ number of days or weeks with simple flags.
+  * **Multipliers:** Look back any number of days, weeks, months, or years with simple flags.
+  * **Just Your Work:** `--me` shows only your own commits.
   * **Native File Export:** Built-in support for logging summaries to text files.
   * **Blazing Fast:** Written in C for near-instant execution even in massive monorepos.
 
@@ -57,7 +47,7 @@ sudo make install
 
 ## 🛠 Usage
 
-The basic syntax is `git recall [range] [multiplier]`.
+The basic syntax is `git recall [range] [multiplier] [--me]`.
 
 ### Quick Scopes
 
@@ -77,6 +67,18 @@ Need to see the last 3 days or 2 months? Just add the number:
 git recall --day -3    # Last 3 days
 git recall --month -2  # Last 2 months
 ```
+
+### Only Your Commits
+
+Add `--me` to filter by your `git config user.email` — perfect for standups:
+
+```bash
+git recall --week --me
+```
+
+### Help & Colors
+
+`git recall --help` prints all options. Colors are turned off automatically when the output is piped (e.g. `git recall | less`) or when the `NO_COLOR` environment variable is set.
 
 ### Exporting Reports
 
@@ -115,7 +117,7 @@ If you see garbled characters like `ΓöÇ` instead of smooth lines `─`, your 
 2.  Paste: `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
 3.  Restart PowerShell.
 
-> [\!TIP]
+> [!TIP]
 > For the best experience, use **Windows Terminal**. It handles Unicode natively without any extra configuration.
 
 -----
@@ -126,6 +128,8 @@ If you see garbled characters like `ΓöÇ` instead of smooth lines `─`, your 
 | :--- | :--- |
 | `Not a git repository...` | Run the command inside a folder initialized with `git init`. |
 | `Unknown option: --xyz` | Check `git recall --help` for valid flags. |
+| `Invalid multiplier '-x'` | Use a whole number from `-1` to `-10000`. |
+| `--me needs git user.email` | Run `git config --global user.email you@example.com`. |
 | `Expected filename after '>'` | Ensure you provide a path (e.g., `> report.txt`). |
 | `Cannot open file 'x'` | Check folder permissions or if the file is locked by another app. |
 
