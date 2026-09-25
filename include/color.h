@@ -24,6 +24,10 @@ extern int use_color;
    or an empty string if they are off            */
 const char *C(const char *code);
 
+/* turn colors off when stdout is not a terminal
+   or when NO_COLOR is set (https://no-color.org) */
+void init_color(void);
+
 /* helpers used across multiple modules */
 void print_separator(FILE *out);
 void print_error(const char *msg);

@@ -21,6 +21,7 @@ typedef struct {
     int     multiplier;         /* how many of that unit    */
     char    outfile[RECALL_MAX_PATH];  /* output filename, or ""   */
     int     make_file;          /* 1 if -mk was given       */
+    int     show_help;          /* 1 if --help / -h given   */
 } RecallArgs;
 
 /* parse argv into a RecallArgs struct.

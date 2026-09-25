@@ -11,6 +11,7 @@
 
 void print_usage(void) {
     fprintf(stderr, "Usage: git recall [--day|--week|--month|--year] [-N] [> [-mk] file]\n");
+    fprintf(stderr, "  Colors are disabled when output is piped or NO_COLOR is set.\n");
     fprintf(stderr, "  Examples:\n");
     fprintf(stderr, "    git recall                   # last week (default)\n");
     fprintf(stderr, "    git recall --month           # last month\n");
@@ -25,8 +26,15 @@ int parse_args(int argc, char *argv[], RecallArgs *a) {
     a->multiplier = 1;
     a->outfile[0] = '\0';
     a->make_file  = 0;
+    a->show_help  = 0;
 
     for (int i = 1; i < argc; i++) {
+
+        /* ── help ── */
+        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            a->show_help = 1;
+            return 0;
+        }
 
         /* ── period flags ── */
         if (strcmp(argv[i], "--day")   == 0) { a->period = PERIOD_DAY;   continue; }
