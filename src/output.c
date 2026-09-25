@@ -63,16 +63,17 @@ int run_recall(FILE *out, Period period, int mult) {
     fprintf(out, "\n");
 
     /* ── build git log command ──
-       format fields separated by | :
+       format fields separated by 0x1F (unit separator),
+       which cannot appear in a subject — unlike '|':
          %h  = short hash
          %ad = author date (formatted below)
          %an = author name
          %s  = commit subject                */
     snprintf(cmd, sizeof(cmd),
              "git log --all --since=\"%s\" "
-             "--pretty=format:\"%%h|%%ad|%%an|%%s\" "
+             "--pretty=format:\"%%h%%x1f%%ad%%x1f%%an%%x1f%%s\" "
              "--date=format:\"%%Y-%%m-%%d %%H:%%M\" "
-             "--no-merges 2>&1",
+             "--no-merges",
              since);
 
     FILE *pipe = popen(cmd, "r");
@@ -86,17 +87,16 @@ int run_recall(FILE *out, Period period, int mult) {
 
     while (fgets(line, sizeof(line), pipe)) {
 
-        /* strip trailing newline */
+        /* strip trailing newline (and \r on Windows) */
         size_t len = strlen(line);
-        if (len > 0 && line[len - 1] == '\n') line[len - 1] = '\0';
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
+            line[--len] = '\0';
 
-        /* split on pipe delimiter */
-        char *hash    = strtok(line, "|");
-        char *date    = strtok(NULL, "|");
-        char *author  = strtok(NULL, "|");
-        char *subject = strtok(NULL, "|");
-
-        if (!hash || !date || !author || !subject) continue;
+        /* split on unit separator; subject keeps the rest of the line */
+        char *hash    = line;
+        char *date    = strchr(hash, '\x1f');   if (!date)    continue; *date++    = '\0';
+        char *author  = strchr(date, '\x1f');   if (!author)  continue; *author++  = '\0';
+        char *subject = strchr(author, '\x1f'); if (!subject) continue; *subject++ = '\0';
 
         /* ── date group header (printed once per day) ── */
         char day[16] = "";
@@ -120,7 +120,11 @@ int run_recall(FILE *out, Period period, int mult) {
 
         count++;
     }
-    pclose(pipe);
+    if (pclose(pipe) != 0) {
+        /* git already printed its own message to stderr */
+        print_error("git log failed.");
+        return 1;
+    }
 
     /* ── footer ── */
     fprintf(out, "\n");
