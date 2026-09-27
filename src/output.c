@@ -108,6 +108,8 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
     fprintf(out, "\n");
 
     /* ── build git log command ──
+       --since gets an explicit midnight: a bare date makes git use
+       the current time of day, dropping the start of the first day.
        format fields separated by 0x1F (unit separator),
        which cannot appear in a subject — unlike '|':
          %h  = short hash
@@ -115,7 +117,7 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
          %an = author name
          %s  = commit subject                */
     snprintf(cmd, sizeof(cmd),
-             "git log --all --since=\"%s\" %s"
+             "git log --all --since=\"%s 00:00:00\" %s"
              "--pretty=format:\"%%h%%x1f%%ad%%x1f%%an%%x1f%%s\" "
              "--date=format:\"%%Y-%%m-%%d %%H:%%M\" "
              "--no-merges",
