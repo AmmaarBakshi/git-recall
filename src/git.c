@@ -46,7 +46,13 @@ void build_since(char *buf, size_t sz, Period period, int mult) {
     }
 
     t->tm_isdst = -1;
-    mktime(t);   /* normalise — handles day/month roll-over */
+    /* normalise — handles day/month roll-over.  mktime fails for
+       dates it can't represent (before 1970 on Windows), so fall
+       back to the epoch instead of printing a garbage date      */
+    if (mktime(t) == (time_t)-1) {
+        snprintf(buf, sz, "1970-01-01");
+        return;
+    }
     strftime(buf, sz, "%Y-%m-%d", t);
 }
 
