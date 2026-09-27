@@ -71,11 +71,22 @@ int main(int argc, char *argv[]) {
     /* 4. fetch git log and print */
     int ret = run_recall(out, args.period, args.multiplier, args.only_me);
 
-    /* 5. close file and notify user if we wrote to one */
-    if (out != stdout) {
-        fclose(out);
-        fprintf(stderr, "[git-recall] Output written to: %s\n", args.outfile);
+    /* 5. flush/close and check for write errors (disk full, closed
+          pipe, ...) — only claim success if everything landed      */
+    int write_err = ferror(out);
+    if (out != stdout)
+        write_err |= fclose(out) != 0;
+    else
+        write_err |= fflush(stdout) != 0;
+
+    if (write_err) {
+        print_error(out != stdout ? "Failed to write the output file."
+                                  : "Failed to write output.");
+        return 1;
     }
+
+    if (out != stdout && ret == 0)
+        fprintf(stderr, "[git-recall] Output written to: %s\n", args.outfile);
 
     return ret;
 }
