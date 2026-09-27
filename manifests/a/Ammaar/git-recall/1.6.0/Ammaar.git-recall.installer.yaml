@@ -2,14 +2,14 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
 
 PackageIdentifier: Ammaar.git-recall
-PackageVersion: 1.1.0
+PackageVersion: 1.6.0
 InstallerType: portable
 Commands:
 - git-recall
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/AmmaarBakshi/git-recall/releases/download/v1.0.0/git-recall.exe
-  InstallerSha256: 985BA809EC8792247AA646917C8350AC83918D681EF6E2A78C228E8187B2275A
+  InstallerUrl: https://github.com/AmmaarBakshi/git-recall/releases/download/v1.6.0/git-recall.exe
+  InstallerSha256: 08F99F3B70BC984C838455AC6B153B2E9D78ACE2CAA1D0D1D9F6286BF432EC28
 ManifestType: installer
 ManifestVersion: 1.12.0
-ReleaseDate: 2026-04-11
+ReleaseDate: 2026-09-27
