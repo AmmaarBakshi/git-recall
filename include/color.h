@@ -20,6 +20,10 @@
    so no ANSI escape codes pollute plain text     */
 extern int use_color;
 
+/* same idea for stderr, decided independently so
+   `git recall 2> err.log` stays free of ANSI codes */
+extern int use_color_err;
+
 /* returns the color code if colors are on,
    or an empty string if they are off            */
 const char *C(const char *code);
