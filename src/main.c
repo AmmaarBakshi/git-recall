@@ -1,5 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
+#include <stdlib.h>
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -25,10 +26,21 @@
        main.c
    ───────────────────────────────────────────── */
 
+#ifdef _WIN32
+/* SetConsoleOutputCP changes the code page of the whole console,
+   not just this process — put the user's setting back on exit   */
+static UINT saved_cp;
+static void restore_cp(void) { SetConsoleOutputCP(saved_cp); }
+#endif
+
 int main(int argc, char *argv[]) {
 
     #ifdef _WIN32
-        SetConsoleOutputCP(CP_UTF8);
+        saved_cp = GetConsoleOutputCP();
+        if (saved_cp != 0 && saved_cp != CP_UTF8) {
+            SetConsoleOutputCP(CP_UTF8);
+            atexit(restore_cp);
+        }
     #endif
 
     init_color();
