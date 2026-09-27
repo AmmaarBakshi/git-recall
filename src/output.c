@@ -76,6 +76,29 @@ static void sanitize(char *s) {
     }
 }
 
+/* ── one parsed git log line; all fields point into hash's buffer ── */
+typedef struct {
+    char   *hash;
+    char   *date;      /* "YYYY-MM-DD HH:MM" — sorts as a string */
+    char   *author;
+    char   *subject;
+    size_t  seq;       /* position in git's output, for stable ties */
+} Commit;
+
+/* newest date first; equal dates keep git's order */
+static int cmp_commit(const void *pa, const void *pb) {
+    const Commit *a = pa, *b = pb;
+    int d = strcmp(b->date, a->date);
+    if (d != 0) return d;
+    return (a->seq > b->seq) - (a->seq < b->seq);
+}
+
+static void free_commits(Commit *commits, size_t n) {
+    for (size_t i = 0; i < n; i++)
+        free(commits[i].hash);
+    free(commits);
+}
+
 /* ── fetch git log and print commits ── */
 int run_recall(FILE *out, Period period, int mult, int only_me) {
     char since[64];
@@ -113,13 +136,15 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
        format fields separated by 0x1F (unit separator),
        which cannot appear in a subject — unlike '|':
          %h  = short hash
-         %ad = author date (formatted below)
+         %ad = author date, in local time so
+                commits from other timezones sort
+                and group consistently
          %an = author name
          %s  = commit subject                */
     snprintf(cmd, sizeof(cmd),
              "git log --all --since=\"%s 00:00:00\" %s"
              "--pretty=format:\"%%h%%x1f%%ad%%x1f%%an%%x1f%%s\" "
-             "--date=format:\"%%Y-%%m-%%d %%H:%%M\" "
+             "--date=format-local:\"%%Y-%%m-%%d %%H:%%M\" "
              "--no-merges",
              since, author_opt);
 
@@ -129,8 +154,10 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
         return 1;
     }
 
-    int  count     = 0;
-    char last_date[16] = "";
+    /* ── collect commits first, then sort and print ── */
+    Commit *commits = NULL;
+    size_t  n = 0, cap = 0;
+    int     oom = 0;
 
     while (fgets(line, sizeof(line), pipe)) {
 
@@ -148,33 +175,78 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
         sanitize(author);
         sanitize(subject);
 
+        if (n == cap) {
+            size_t ncap = cap ? cap * 2 : 64;
+            Commit *grown = realloc(commits, ncap * sizeof(*commits));
+            if (!grown) { oom = 1; break; }
+            commits = grown;
+            cap = ncap;
+        }
+
+        /* one allocation holds all four fields back to back */
+        char *buf = malloc(len + 1);
+        if (!buf) { oom = 1; break; }
+        memcpy(buf, line, len + 1);
+
+        Commit *c  = &commits[n];
+        c->hash    = buf;
+        c->date    = buf + (date    - line);
+        c->author  = buf + (author  - line);
+        c->subject = buf + (subject - line);
+        c->seq     = n;
+        n++;
+    }
+
+    if (oom) {
+        /* drain so git doesn't die on a broken pipe */
+        while (fgets(line, sizeof(line), pipe)) {}
+        pclose(pipe);
+        free_commits(commits, n);
+        print_error("Out of memory.");
+        return 1;
+    }
+
+    if (pclose(pipe) != 0) {
+        /* git already printed its own message to stderr */
+        free_commits(commits, n);
+        print_error("git log failed.");
+        return 1;
+    }
+
+    /* git lists commits in graph order, but we group by author date;
+       after a rebase or cherry-pick those disagree and the same day
+       header would appear twice. sort newest-first by author date. */
+    if (n > 1)
+        qsort(commits, n, sizeof(*commits), cmp_commit);
+
+    char last_date[16] = "";
+
+    for (size_t i = 0; i < n; i++) {
+        const Commit *c = &commits[i];
+
         /* ── date group header (printed once per day) ── */
         char day[16] = "";
-        strncpy(day, date, 10);
+        strncpy(day, c->date, 10);
         day[10] = '\0';
 
         if (strcmp(day, last_date) != 0) {
-            if (count > 0) fprintf(out, "\n");
+            if (i > 0) fprintf(out, "\n");
             fprintf(out, "%s  %s%s\n",
                     C(COL_YELLOW), day, C(COL_RESET));
             strncpy(last_date, day, sizeof(last_date));
         }
 
         /* ── commit line ── */
-        const char *time_part = (strlen(date) > 11) ? date + 11 : "";
+        const char *time_part = (strlen(c->date) > 11) ? c->date + 11 : "";
 
         fprintf(out, "  %s%s%s  %s%s%s  %s@ %s  %s%s\n",
-                C(COL_GREEN),  hash,      C(COL_RESET),
-                C(COL_RESET),  subject,   C(COL_RESET),
-                C(COL_GRAY),   time_part, author, C(COL_RESET));
+                C(COL_GREEN),  c->hash,    C(COL_RESET),
+                C(COL_RESET),  c->subject, C(COL_RESET),
+                C(COL_GRAY),   time_part,  c->author, C(COL_RESET));
+    }
 
-        count++;
-    }
-    if (pclose(pipe) != 0) {
-        /* git already printed its own message to stderr */
-        print_error("git log failed.");
-        return 1;
-    }
+    int count = (int)n;
+    free_commits(commits, n);
 
     /* ── footer ── */
     fprintf(out, "\n");
