@@ -59,6 +59,23 @@ static int get_user_email(char *buf, size_t sz) {
     return 0;
 }
 
+/* ── replace terminal control characters in place, so a commit
+      subject can't smuggle escape sequences into the terminal.
+      covers C0 (0x00-0x1F), DEL, and UTF-8 encoded C1 (U+0080-U+009F),
+      e.g. U+009B which some terminals treat as CSI ── */
+static void sanitize(char *s) {
+    unsigned char *p = (unsigned char *)s;
+    for (; *p; p++) {
+        if (*p < 0x20 || *p == 0x7f) {
+            *p = '?';
+        } else if (*p == 0xc2 && p[1] >= 0x80 && p[1] <= 0x9f) {
+            p[0] = '?';
+            p[1] = '?';
+            p++;
+        }
+    }
+}
+
 /* ── fetch git log and print commits ── */
 int run_recall(FILE *out, Period period, int mult, int only_me) {
     char since[64];
@@ -125,6 +142,9 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
         char *date    = strchr(hash, '\x1f');   if (!date)    continue; *date++    = '\0';
         char *author  = strchr(date, '\x1f');   if (!author)  continue; *author++  = '\0';
         char *subject = strchr(author, '\x1f'); if (!subject) continue; *subject++ = '\0';
+
+        sanitize(author);
+        sanitize(subject);
 
         /* ── date group header (printed once per day) ── */
         char day[16] = "";
