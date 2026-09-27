@@ -133,6 +133,8 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
     /* ── build git log command ──
        --since gets an explicit midnight: a bare date makes git use
        the current time of day, dropping the start of the first day.
+       --no-show-signature: with log.showSignature=true git would run
+       gpg for every commit, which is slow and output we don't use.
        format fields separated by 0x1F (unit separator),
        which cannot appear in a subject — unlike '|':
          %h  = short hash
@@ -145,7 +147,7 @@ int run_recall(FILE *out, Period period, int mult, int only_me) {
              "git log --all --since=\"%s 00:00:00\" %s"
              "--pretty=format:\"%%h%%x1f%%ad%%x1f%%an%%x1f%%s\" "
              "--date=format-local:\"%%Y-%%m-%%d %%H:%%M\" "
-             "--no-merges",
+             "--no-merges --no-show-signature",
              since, author_opt);
 
     FILE *pipe = popen(cmd, "r");

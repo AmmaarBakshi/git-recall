@@ -68,6 +68,11 @@ int main(int argc, char *argv[]) {
     if (!out)
         return 1;
 
+    /* the report is written in one go, so buffer it fully — the
+       Windows console stream is unbuffered by default and would
+       otherwise cost a WriteFile call per fprintf              */
+    setvbuf(out, NULL, _IOFBF, 1 << 16);
+
     /* 4. fetch git log and print */
     int ret = run_recall(out, args.period, args.multiplier, args.only_me);
 
