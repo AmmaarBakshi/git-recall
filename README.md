@@ -115,7 +115,9 @@ Note the quotes in the second example: an unquoted `>` is taken by your shell (b
 
 ## 🔧 Windows Encoding Fix
 
-If you see garbled characters like `ΓöÇ` instead of smooth lines `─`, your PowerShell session isn't using UTF-8.
+Since 1.6.0, git-recall switches the console to UTF-8 while it runs and **restores your original code page** when it exits. It also turns on ANSI color support in the classic Windows console, so you shouldn't see raw codes like `←[1;32m` any more. If a console can't show colors, git-recall prints plain text instead.
+
+If you still see garbled characters like `ΓöÇ` instead of smooth lines `─`, it's usually when the output goes through PowerShell, e.g. `git recall | Out-File log.txt` or `$x = git recall`. That means PowerShell itself isn't reading the output as UTF-8.
 
 **The Permanent Fix:**
 
@@ -137,7 +139,11 @@ If you see garbled characters like `ΓöÇ` instead of smooth lines `─`, your 
 | `Invalid multiplier '-x'` | Use a whole number from `-1` to `-10000`. |
 | `--me needs git user.email` | Run `git config --global user.email you@example.com`. |
 | `Expected filename after '>'` | Ensure you provide a path (e.g., `> report.txt`). |
+| `Expected filename after '-mk'` | Put a path after `-mk` (e.g., `'>' -mk report.txt`). |
 | `Cannot open file 'x'` | Check folder permissions or if the file is locked by another app. |
+| `Unknown option: report.txt` | Your shell took an unquoted `>`. Quote it: `'>' -mk report.txt`. |
+| `git log failed.` | git printed the real reason just above — often a corrupt or unreadable repository. |
+| `Failed to write output.` / `Failed to write the output file.` | The disk is full, or the pipe/terminal was closed before git-recall finished. |
 
 -----
 
