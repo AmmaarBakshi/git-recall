@@ -102,14 +102,34 @@ Note the quotes in the second example: an unquoted `>` is taken by your shell (b
 
 ```text
 ──────────────────────────────────────────────────────
-  git recall  —  Last Week  (since 2026-04-04)
+  git recall  —  Last Week  (since 2026-09-21)
 ──────────────────────────────────────────────────────
-  2026-04-11
-  448e66e  git-recall 0.1.0 : the base version  @ 19:41  AmmaarBakshi
+
+  2026-09-27
+  3ed66e2  Speed up output: buffer the report and skip signature checks  @ 23:31  AMMAAR-IC
+  989b18d  Stop repeating day headers after rebases and cross-timezone commits  @ 23:30  AMMAAR-IC
+  1da5ea1  Report write failures instead of claiming success  @ 23:29  AMMAAR-IC
+
+  2026-09-25
+  35f1368  Add --me flag to show only your own commits  @ 23:39  AMMAAR-IC
+
 ──────────────────────────────────────────────────────
-  Total commits: 1
+  Total commits: 4
 ──────────────────────────────────────────────────────
 ```
+
+-----
+
+## 🆕 What's New in 1.6.0
+
+  * **Safer output:** Commit messages can no longer inject terminal escape codes (colors, window titles). Control characters are shown as `?`.
+  * **No missed commits:** Ranges now start at midnight of the first day. Before, commits from early that morning could be left out.
+  * **Cleaner grouping:** Each day appears once, even after rebases or cherry-picks, and all times are in your local timezone.
+  * **Better on Windows:** Colors work in the classic console, and your console's code page is put back when git-recall exits.
+  * **Honest exit codes:** A failed write (full disk, closed pipe) now exits with an error instead of reporting success.
+  * **Faster:** Output is written in large blocks, and GPG signatures are no longer checked for every commit.
+
+See the [full release notes](https://github.com/AmmaarBakshi/git-recall/releases/tag/v1.6.0).
 
 -----
 
