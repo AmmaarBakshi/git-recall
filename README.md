@@ -2,7 +2,7 @@
 
 **git-recall** is your personal standup assistant. Built in **pure C** with zero dependencies, it provides a lightning-fast summary of what you and your team have accomplished over any timeframe.
 
-[**Installation**](#-install) • [**Usage**](#-usage) • [**Troubleshooting**](#-windows-encoding-fix) • [**License**](#-license)
+[**Installation**](#-install) • [**Usage**](#-usage) • [**Troubleshooting**](#-windows-encoding-fix) • [**Errors**](#️-error-reference) • [**License**](#-license)
 
 -----
 
@@ -141,4 +141,4 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 -----
 
-*Created by [AmmaarBakshi](https://www.google.com/search?q=https://github.com/AmmaarBakshi)*
+*Created by [AmmaarBakshi](https://github.com/AmmaarBakshi)* • [Releases](https://github.com/AmmaarBakshi/git-recall/releases) • [Report an issue](https://github.com/AmmaarBakshi/git-recall/issues)
