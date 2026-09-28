@@ -87,12 +87,14 @@ git recall --week --me
 ### Exporting Reports
 
 ```bash
-# Append/Write to an existing file
+# Write to a file (creates it, or overwrites it if it exists)
 git recall --month > recall.txt
 
-# Force create a new file and write
-git recall --month > -mk recall.txt
+# Let git-recall create the file itself and confirm where it wrote
+git recall --month '>' -mk recall.txt
 ```
+
+Note the quotes in the second example: an unquoted `>` is taken by your shell (bash, zsh, PowerShell, cmd), which would write to a file literally named `-mk`. Quoting it passes `>` to git-recall instead. Files are always written as plain text without color codes, and git-recall exits with an error if the write fails (for example, a full disk).
 
 -----
 
