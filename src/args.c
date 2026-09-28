@@ -10,15 +10,17 @@
    ───────────────────────────────────────────── */
 
 void print_usage(void) {
-    fprintf(stderr, "Usage: git recall [--day|--week|--month|--year] [-N] [--me] [> [-mk] file]\n");
+    fprintf(stderr, "Usage: git recall [--day|--week|--month|--year] [-N] [--me] ['>' [-mk] file]\n");
     fprintf(stderr, "  Colors are disabled when output is piped or NO_COLOR is set.\n");
     fprintf(stderr, "  Examples:\n");
-    fprintf(stderr, "    git recall                   # last week (default)\n");
-    fprintf(stderr, "    git recall --month           # last month\n");
-    fprintf(stderr, "    git recall --month -2        # last 2 months\n");
-    fprintf(stderr, "    git recall --week --me       # only your own commits\n");
-    fprintf(stderr, "    git recall --year > log.txt  # write to file\n");
-    fprintf(stderr, "    git recall --day > -mk out.txt  # create file & write\n");
+    fprintf(stderr, "    git recall                        # last week (default)\n");
+    fprintf(stderr, "    git recall --month                # last month\n");
+    fprintf(stderr, "    git recall --month -2             # last 2 months\n");
+    fprintf(stderr, "    git recall --week --me            # only your own commits\n");
+    fprintf(stderr, "    git recall --year > log.txt       # write to file\n");
+    fprintf(stderr, "    git recall --day '>' -mk out.txt  # create file & write\n");
+    fprintf(stderr, "  Quote the '>' when using -mk, or your shell will treat it as\n");
+    fprintf(stderr, "  its own redirect and write to a file named '-mk'.\n");
 }
 
 int parse_args(int argc, char *argv[], RecallArgs *a) {
